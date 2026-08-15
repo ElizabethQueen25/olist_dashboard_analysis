@@ -8,7 +8,7 @@ Managing logistics, payment gateways, product variety, and fulfillment times acr
 ---
 
 ## 2. Dataset & Data Architecture
-The dataset was obtained from the official **Brazilian E-Commerce Public Dataset by Olist on Kaggle**, comprising real commercial records between **2016 and 2018**.
+The dataset was obtained from the official **[Brazilian E-Commerce Public Dataset by Olist on Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)**, comprising real commercial records between **2016 and 2018**.
 
 ### Relational Schema Tables
 * **`olist_orders_dataset`**: Core transaction table tracking order status, order creation, approval timestamp, carrier pickup, and delivery timestamps.
