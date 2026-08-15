@@ -21,6 +21,8 @@ The dataset was obtained from the official **[Brazilian E-Commerce Public Datase
 * **`olist_sellers_dataset`**: Merchant registry and location coordinates.
 * **`olist_geolocation_dataset`**: Brazilian zip code prefix coordinates (latitude and longitude) used for spatial mapping.
 
+![Relational_Schema](images/schema.png)
+
 ---
 
 ## 3. Detailed Page-by-Page Analysis
