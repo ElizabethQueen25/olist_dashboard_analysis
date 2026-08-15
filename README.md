@@ -270,7 +270,9 @@ AVG. INSTALLMENTS = AVERAGE(olist_order_payments_dataset[payment_installments])
 
 ## 4. UI/UX Design System (Figma)
 
-**Design Philosophy:** Human-centered dashboard design built using Figma canvas components exported at 2x resolution.
+![Figma_design](images/figma_design/figma_design_guide.png)
+
+**Design:** Ddashboard design built using Figma with a 1080x1050 (Full HD) resolution 😊
 
 ### Color Palette
 
