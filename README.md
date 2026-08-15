@@ -33,7 +33,7 @@ The dataset was obtained from the official **Brazilian E-Commerce Public Dataset
 Commercial leadership needs to evaluate overall revenue performance, average order size, freight burdens, and geographic concentration.
 * **Hypothesis:** Revenue is heavily centralized in the industrialized Southeast region (São Paulo, Rio de Janeiro, Minas Gerais), while smaller peripheral markets bear higher relative freight costs.
 
-![Sales Overview](overview.png)
+![Sales Overview](images/overview.png)
 
 #### Key Visuals & Role
 * **KPI Header Cards:** Track aggregate `GROSS SALES`, `TOTAL ORDERS SOLD`, `AVG. ORDER VALUE (AOV)`, `FREIGHT-TO-PRICE`, and `MoM SALES GROWTH`.
@@ -82,7 +82,7 @@ IF(
 Logistics is the primary driver of customer experience in e-commerce.  
 * **Hypothesis:** Meeting the estimated delivery date (On-Time Delivery SLA) directly protects brand trust; transit delays are disproportionately concentrated in the Northern and Northeastern regions due to long-haul carrier routing.
 
-![Logistics and OTD](logistics.png)
+![Logistics and OTD](images/logistics.png)
 
 #### Key Visuals & Role
 * **OTD SLA Gauge & Historical Trend:** Compares current compliance against the 90% SLA benchmark across time.
@@ -139,7 +139,7 @@ AVERAGEX(
 ### Business Context & Hypotheses
 Analyzes customer acquisition velocity, geographic reach, retention, and buyer value.
 
-![Customer Analysis](customer.png)
+![Customer Analysis](images/customer.png)
 
 **Hypothesis:** Marketplace acquisition is largely top-of-funnel driven, with low organic repurchase rates requiring loyalty activation strategies.
 
@@ -184,7 +184,7 @@ DIVIDE([GROSS SALES], [TOTAL UNIQUE CUSTOMERS], 0)
 ### Business Context & Hypotheses
 Investigates product catalog distribution, pricing tiers, item weights, and associated freight sensitivities.
 
-![Product Analysis](products_categories.png)
+![Product Analysis](images/products_categories.png)
 
 **Hypothesis:** Bulky and heavy items experience lower purchase frequency due to high freight costs, while high-value electronics maintain distinct margin dynamics.
 
@@ -218,7 +218,7 @@ ACTIVE CATEGORIES = DISTINCTCOUNT(olist_products_dataset[product_category_name])
 ### Business Context & Hypotheses
 Examines the relationship between payment gateway settlement times, installment financing, and customer review scores.
 
-![Payment and Review Analysis](payment_satisfaction.png)
+![Payment and Review Analysis](images/payment_satisfaction.png)
 
 **Hypothesis:** Boleto Bancário orders exhibit longer end-to-end delivery times due to banking settlement delays (1–3 business days), which negatively impacts review ratings compared to instant payment methods.
 
