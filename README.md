@@ -131,10 +131,10 @@ AVERAGEX(
     DATEDIFF(
         olist_orders_dataset[order_purchase_timestamp], 
         olist_orders_dataset[order_approved_at],
-```
         MINUTE
     ) / 60
 )
+```
 
 ## Page 3: Customer Insights
 
