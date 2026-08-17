@@ -1,45 +1,38 @@
-# CALENDAR HACK! 📅
+# Dynamic Calendar Table for Power BI / Power Query 📅 📅
 
-Hi there! Are you struggling to create each column and category for your calendar table? 👀 Then you might find this tool really helpfull. 
+A quick way to generate a complete, dynamic Date Dimension table for your Power BI reports
 
-**Important:** Don't forget to replace the name of the correct calendar column into this query
+**Important:** Update the "Source" step with your actual fact table and date column name: #"YourTableName"[YourDateColumn]
 
 ```
 let
-    Source = #"olist_orders_dataset"[order_purchase_timestamp],
-    FechaInicio = #date(Date.Year(List.Min(Source)),1,1),
-    FechaFinal = #date(Date.Year(List.Max(Source)),12,31),
-    ListaInicioFinal = {Number.From(FechaInicio)..Number.From(FechaFinal)},
-    #"Converted to Table" = Table.FromList(ListaInicioFinal, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    Source = #"olist_orders_dataset"[order_purchase_timestamp],  /// --> your fact table and date column goes here: "YourTableName"[YourDateColumn]
+    StartDate = #date(Date.Year(List.Min(Source)), 1, 1),
+    EndDate = #date(Date.Year(List.Max(Source)), 12, 31),
+    DateList = {Number.From(StartDate)..Number.From(EndDate)},
+    #"Converted to Table" = Table.FromList(DateList, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{"Column1", type date}}),
-    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",={{"Column1", "Fecha"}}),
-    #"Added Custom Column" = Table.AddColumn(#"Renamed Columns", "Custom", each Text.Combine({Date.ToText([Fecha], "yyyy"), Date.ToText([Fecha], "MM"), Date.ToText([Fecha], "dd")})),
-    #"Inserted Year" = Table.AddColumn(#"Added Custom Column", "Year", each Date.Year([Fecha]), Int64.Type),
-    #"Inserted Quarter" = Table.AddColumn(#"Inserted Year", "Quarter", each Date.QuarterOfYear([Fecha]), Int64.Type),
-    #"Inserted Month" = Table.AddColumn(#"Inserted Quarter", "Month", each Date.Month([Fecha]), Int64.Type),
-    #"Inserted Day" = Table.AddColumn(#"Inserted Month", "Day", each Date.Day([Fecha]), Int64.Type),
-    #"Inserted Merged Column" = Table.AddColumn(#"Inserted Day", "Merged", each Text.Combine({"T", Text.From([Quarter], "es-MX")}), type text),
-    #"Inserted Month Name" = Table.AddColumn(#"Inserted Merged Column", "Month Name", each Date.MonthName([Fecha]), type text),
-    #"Inserted First Characters" = Table.AddColumn(#"Inserted Month Name", "First Characters", each Text.Start([Month Name], 3), type text),
-    #"Inserted Day of Week" = Table.AddColumn(#"Inserted First Characters", "Day of Week", each Date.DayOfWeek([Fecha]), Int64.Type),
-    #"Inserted Week of Year" = Table.AddColumn(#"Inserted Day of Week", "Week of Year", each Date.WeekOfYear([Fecha]), Int64.Type),
-    #"Inserted Week of Month" = Table.AddColumn(#"Inserted Week of Year", "Week of Month", each Date.WeekOfMonth([Fecha]), Int64.Type),
-    #"Inserted End of Week" = Table.AddColumn(#"Inserted Week of Month", "End of Week", each Date.EndOfWeek([Fecha], Day.Monday), type date),
-    #"Inserted Day of Year" = Table.AddColumn(#"Inserted End of Week", "Day of Year", each Date.DayOfYear([Fecha]), Int64.Type),
-    #"Inserted Day Name" = Table.AddColumn(#"Inserted Day of Year", "Day Name", each Date.DayOfWeekName([Fecha]), type text),
-    #"Inserted First Characters1" = Table.AddColumn(#"Inserted Day Name", "First Characters.1", each Text.Start([Day Name], 3), type text),
-    #"Inserted Merged Column1" = Table.AddColumn(#"Inserted First Characters1", "Merged.1", each Text.Combine({Text.From([Year], "es-MX"), [Month Name]}, "-"), type text),
-    #"Inserted First Characters2" = Table.AddColumn(#"Inserted Merged Column1", "First Characters.2", each Text.Start([Custom], 6), type text),
-    #"Split Column by Position" = Table.SplitColumn(#"Inserted First Characters2", "First Characters.2", Splitter.SplitTextByPositions({0, 4}, false), {"First Characters.2.1", "First Characters.2.2"}),
-    #"Merged Columns" = Table.CombineColumns(#"Split Column by Position", {"First Characters.2.1", "First Characters.2.2"}, Combiner.CombineTextByDelimiter("-", QuoteStyle.None), "Merged.2"),
-    #"Inserted Merged Column2" = Table.AddColumn(#"Merged Columns", "Merged.2", each Text.Combine({Text.From([Year], "es-MX"), "/", [First Characters.2.2]}), type text),
-    #"Replaced Value" = Table.ReplaceValue(#"Inserted Merged Column2",0,7,Replacer.ReplaceValue,{"Day of Week"}),
-    #"Renamed Columns1" = Table.RenameColumns(#"Replaced Value",={{"Custom", "FechaSK"}, {"Year", "Año"}, {"Quarter", "Trimestre"}, {"Month", "Mes"}}),
-    #"Inserted Start of Month" = Table.AddColumn(#"Renamed Columns1", "Start of Month", each Date.StartOfMonth([Fecha]), type date),
-    #"Renamed Columns2" = Table.RenameColumns(#"Inserted Start of Month",={{"Start of Month", "InicioMes"}}),
-    #"Inserted End of Month" = Table.AddColumn(#"Renamed Columns2", "End of Month", each Date.EndOfMonth([Fecha]), type date),
-    #"Renamed Columns3" = Table.RenameColumns(#"Inserted End of Month",={{"End of Month", "FinMes"}})
+    #"Renamed Date Column" = Table.RenameColumns(#"Changed Type", {{"Column1", "#Date"}}),
+    #"Added DateKey" = Table.AddColumn(#"Renamed Date Column", "#DateKey", each Text.Combine({Date.ToText([#"#Date"], "yyyy"), Date.ToText([#"#Date"], "MM"), Date.ToText([#"#Date"], "dd")}), type text),
+    #"Inserted Year" = Table.AddColumn(#"Added DateKey", "#Year", each Date.Year([#"#Date"]), Int64.Type),
+    #"Inserted Quarter" = Table.AddColumn(#"Inserted Year", "#Quarter", each Date.QuarterOfYear([#"#Date"]), Int64.Type),
+    #"Inserted Month" = Table.AddColumn(#"Inserted Quarter", "#Month", each Date.Month([#"#Date"]), Int64.Type),
+    #"Inserted Day" = Table.AddColumn(#"Inserted Month", "#Day", each Date.Day([#"#Date"]), Int64.Type),
+    #"Inserted Quarter Text" = Table.AddColumn(#"Inserted Day", "Quarter", each Text.Combine({"Q", Text.From([#"#Quarter"], "en-US")}), type text),
+    #"Inserted Month Name" = Table.AddColumn(#"Inserted Quarter Text", "Month", each Date.MonthName([#"#Date"], "en-US"), type text),
+    #"Inserted Short Month" = Table.AddColumn(#"Inserted Month Name", "Short Month", each Text.Start([Month], 3), type text),
+    #"Inserted Day of Week" = Table.AddColumn(#"Inserted Short Month", "#Day of Week", each if Date.DayOfWeek([#"#Date"], Day.Monday) = 0 then 7 else Date.DayOfWeek([#"#Date"], Day.Monday), Int64.Type),
+    #"Inserted Week of Year" = Table.AddColumn(#"Inserted Day of Week", "#Week of Year", each Date.WeekOfYear([#"#Date"]), Int64.Type),
+    #"Inserted Week of Month" = Table.AddColumn(#"Inserted Week of Year", "#Week of Month", each Date.WeekOfMonth([#"#Date"]), Int64.Type),
+    #"Inserted End of Week" = Table.AddColumn(#"Inserted Week of Month", "#End of Week", each Date.EndOfWeek([#"#Date"], Day.Monday), type date),
+    #"Inserted Day of Year" = Table.AddColumn(#"Inserted End of Week", "#Day of Year", each Date.DayOfYear([#"#Date"]), Int64.Type),
+    #"Inserted Day Name" = Table.AddColumn(#"Inserted Day of Year", "Day Name", each Date.DayOfWeekName([#"#Date"], "en-US"), type text),
+    #"Inserted Short Day" = Table.AddColumn(#"Inserted Day Name", "Short Day", each Text.Start([Day Name], 3), type text),
+    #"Inserted Year-Month" = Table.AddColumn(#"Inserted Short Day", "Year-Month", each Text.Combine({Text.From([#"#Year"], "en-US"), [Month]}, "-"), type text),
+    #"Inserted Year/Month Code" = Table.AddColumn(#"Inserted Year-Month", "Year/Month Code", each Text.Combine({Text.From([#"#Year"], "en-US"), "/", Date.ToText([#"#Date"], "MM")}), type text),
+    #"Inserted Start of Month" = Table.AddColumn(#"Inserted Year/Month Code", "#Start of Month", each Date.StartOfMonth([#"#Date"]), type date),
+    #"Inserted End of Month" = Table.AddColumn(#"Inserted Start of Month", "#End of Month", each Date.EndOfMonth([#"#Date"]), type date)
 in
-    #"Renamed Columns3"
+    #"Inserted End of Month"
 
 ```
